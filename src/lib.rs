@@ -18,40 +18,37 @@
 //! ```rust
 //! use mula::Mula;
 //!
-//! fn main() {
-//!     let mula = Mula::new(|input: &str| {
-//!         std::thread::sleep(std::time::Duration::from_secs(2));
-//!         input.to_uppercase()
-//!     });
+//! let mula = Mula::new(|input: &str| {
+//!     std::thread::sleep(std::time::Duration::from_secs(2));
+//!     input.to_uppercase()
+//! });
 //!
-//!     let m = mula.clone();
-//!     let thread1 = std::thread::spawn(move || {
-//!         let upper = Mula::subscribe_to(m, "mula");
-//!         assert_eq!(upper, "MULA".to_string());
-//!     });
+//! let m = mula.clone();
+//! let thread1 = std::thread::spawn(move || {
+//!     let upper = Mula::subscribe_to(m, "mula");
+//!     assert_eq!(upper, "MULA".to_string());
+//! });
 //!
-//!     let m = mula.clone();
-//!     let thread2 = std::thread::spawn(move || {
-//!         let upper = Mula::subscribe_to(m, "burro");
-//!         assert_eq!(upper, "BURRO".to_string());
-//!     });
+//! let m = mula.clone();
+//! let thread2 = std::thread::spawn(move || {
+//!     let upper = Mula::subscribe_to(m, "burro");
+//!     assert_eq!(upper, "BURRO".to_string());
+//! });
 //!
-//!     let m = mula.clone();
-//!     let thread3 = std::thread::spawn(move || {
-//!         let upper = Mula::subscribe_to(m, "burro");
-//!         assert_eq!(upper, "BURRO".to_string());
-//!     });
+//! let m = mula.clone();
+//! let thread3 = std::thread::spawn(move || {
+//!     let upper = Mula::subscribe_to(m, "burro");
+//!     assert_eq!(upper, "BURRO".to_string());
+//! });
 //!
-//!     thread1.join();
-//!     thread2.join();
-//!     thread3.join();
-//! }
+//! thread1.join();
+//! thread2.join();
+//! thread3.join();
 //! ```
 
 
 #![allow(dead_code)]
 use parking_lot::Mutex;
-use spmc;
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::sync::{Arc, Weak};
@@ -155,10 +152,9 @@ where
         // Now that we have the Bus, get a receiver for this thread.
         let receiver = bus.add_receiver();
 
-        // IMPORTANT: need to drop the bus explicitly here, as we are going
+        // IMPORTANT: need to drop the map explicitly here, as we are going
         // to block on the recv() call below, and would be effectively holding
         // a lock on the map, leading to a deadlock.
-        drop(bus);
         drop(map);
 
         // Here we wait for the processing we are interested in to finish.
