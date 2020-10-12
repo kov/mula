@@ -17,6 +17,12 @@ categories = ["concurrency"]
 [dependencies]
 parking_lot = "0.11.0"
 spmc = "0.3.0"
+once_cell = "*"
+mula_proc_macro = { path = "mula_proc_macro"}
 
 [dev-dependencies]
 rand = "0.7.3"
+lazy_static = "*"
+
+[workspace]
+members = ["mula_proc_macro"]

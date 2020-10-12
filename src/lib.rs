@@ -16,28 +16,26 @@
 //! will both be serviced by the same computation.
 //!
 //! ```rust
-//! use mula::Mula;
+//! use mula::mula;
 //!
-//! let mula = Mula::new(|input: &str| {
+//! #[mula]
+//! fn delayed_uppercase(input: &'static str) -> String {
 //!     std::thread::sleep(std::time::Duration::from_secs(2));
 //!     input.to_uppercase()
-//! });
+//! }
 //!
-//! let m = mula.clone();
 //! let thread1 = std::thread::spawn(move || {
-//!     let upper = Mula::subscribe_to(m, "mula");
+//!     let upper = delayed_uppercase("mula");
 //!     assert_eq!(upper, "MULA".to_string());
 //! });
 //!
-//! let m = mula.clone();
 //! let thread2 = std::thread::spawn(move || {
-//!     let upper = Mula::subscribe_to(m, "burro");
+//!     let upper = delayed_uppercase("burro");
 //!     assert_eq!(upper, "BURRO".to_string());
 //! });
 //!
-//! let m = mula.clone();
 //! let thread3 = std::thread::spawn(move || {
-//!     let upper = Mula::subscribe_to(m, "burro");
+//!     let upper = delayed_uppercase("burro");
 //!     assert_eq!(upper, "BURRO".to_string());
 //! });
 //!
@@ -52,6 +50,10 @@ use parking_lot::Mutex;
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::sync::{Arc, Weak};
+
+pub extern crate once_cell;
+
+pub use mula_proc_macro::mula;
 
 /// State tracker that allows for sharing of a specific computation.
 pub struct Mula<T, O, F>

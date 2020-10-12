@@ -1,0 +1,15 @@
+[package]
+authors = ["Gustavo Noronha Silva <gustavo@noronha.eti.br>"]
+edition = "2018"
+name = "mula_proc_macro"
+version = "0.1.0"
+
+[dependencies.quote]
+version = "1.0"
+
+[dependencies.syn]
+features = ["full", "extra-traits", "visit-mut"]
+version = "1.0"
+
+[lib]
+proc-macro = true
