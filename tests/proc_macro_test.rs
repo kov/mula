@@ -36,10 +36,16 @@ fn test_basic() {
     thread2.join().unwrap();
 
     // We should be able to share the work for each input,
-    // so we expect only a single work() call for each.
+    // so we expect only two calls to work() up to here.
     assert_eq!(WORK_COUNTER.load(Ordering::SeqCst), 1);
+
+    assert_eq!(mula_fn("kov"), "KOV".to_string());
+    SUBS_COUNTER.fetch_add(1, Ordering::SeqCst);
+
+    // The call above should have triggered the work again.
+    assert_eq!(WORK_COUNTER.load(Ordering::SeqCst), 2);
 
     // We should be have gotten the response for all the
     // subscribers.
-    assert_eq!(SUBS_COUNTER.load(Ordering::SeqCst), 3);
+    assert_eq!(SUBS_COUNTER.load(Ordering::SeqCst), 4);
 }

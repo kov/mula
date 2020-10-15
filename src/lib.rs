@@ -145,7 +145,7 @@ where
                     let key = input.clone();
                     let result = (thread_mula.work)(input);
                     let mut map = thread_mula.map.lock();
-                    let bus = map.get_mut(&key).unwrap();
+                    let mut bus = map.remove(&key).unwrap();
                     bus.broadcast(result);
                 });
                 Bus::new()
@@ -263,7 +263,7 @@ mod tests {
             counter.fetch_add(1, Ordering::SeqCst);
         });
 
-        let result = Mula::subscribe_to(mula, "kov");
+        let result = Mula::subscribe_to(mula.clone(), "kov");
         assert_eq!(result, "KOV");
         subscriber_counter.fetch_add(1, Ordering::SeqCst);
 
@@ -273,12 +273,20 @@ mod tests {
         thread4.join().unwrap();
         thread5.join().unwrap();
 
-        // We have 6 call sites, we should see all of them
-        // getting a reply.
-        assert_eq!(subscriber_counter.load(Ordering::SeqCst), 6);
-
         // We should be able to share the work for each input,
         // so we expect only a single work() call for each.
         assert_eq!(work_counter.load(Ordering::SeqCst), 3);
+
+        let result = Mula::subscribe_to(mula, "kov");
+        assert_eq!(result, "KOV");
+        subscriber_counter.fetch_add(1, Ordering::SeqCst);
+
+        // This last call happens after the first batch has returned,
+        // so we expect a new work() call.
+        assert_eq!(work_counter.load(Ordering::SeqCst), 4);
+
+        // We have 6 call sites, we should see all of them
+        // getting a reply.
+        assert_eq!(subscriber_counter.load(Ordering::SeqCst), 7);
     }
 }
