@@ -1,6 +1,6 @@
 [package]
 name = "mula"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Gustavo Noronha Silva <gustavo@noronha.eti.br>"]
 edition = "2018"
 
