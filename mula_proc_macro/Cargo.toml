@@ -3,6 +3,7 @@ authors = ["Gustavo Noronha Silva <gustavo@noronha.eti.br>"]
 edition = "2018"
 name = "mula_proc_macro"
 version = "0.1.0"
+autotests = false
 
 [dependencies.quote]
 version = "1.0"

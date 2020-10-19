@@ -1,0 +1,5 @@
+error: mula functions must accept a single argument
+ --> $DIR/03-multiple-inputs.rs:4:1
+  |
+4 | fn mula_fn(i: i64, s: String) -> String {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

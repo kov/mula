@@ -1,0 +1,5 @@
+error: mula functions must return a single value
+ --> $DIR/01-no-output.rs:4:1
+  |
+4 | fn mula_fn(input: &'static str) {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

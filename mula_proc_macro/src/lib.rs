@@ -69,6 +69,10 @@ pub fn mula(_args: TokenStream, input: TokenStream) -> TokenStream {
         original_ident.span()
     );
 
+    if mula_fn.sig.inputs.first().is_none() || mula_fn.sig.inputs.len() > 1 {
+        return syn::Error::new(mula_fn.sig.span(), "mula functions must accept a single argument").to_compile_error().into();
+    }
+
     let input_type = if let syn::FnArg::Typed(pat) = mula_fn.sig.inputs.first().unwrap() {
         &*pat.ty
     } else {
